@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="DSMOOFramework">
+        <HintPath>..\..\..\..\..\.nuget\packages\dsmoo.framework\0.0.1\lib\net8.0\DSMOOFramework.dll</HintPath>
+      </Reference>
+      <Reference Include="DSMOOServer">
+        <HintPath>..\..\..\..\..\.nuget\packages\dsmoo.server\0.0.1\lib\net8.0\DSMOOServer.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DSMOO.Server" Version="0.0.2" />
+    </ItemGroup>
+
+</Project>
