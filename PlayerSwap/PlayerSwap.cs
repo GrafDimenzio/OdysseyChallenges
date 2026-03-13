@@ -42,36 +42,55 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
         if (!Config.Enabled)
             return;
 
-        if (args.Action == PlayerAction.Bonk && Config.SwapOnBonk
-            || args.Action == PlayerAction.Damage && Config.SwapOnDamage)
-            SwapAllPlayers();
+        switch (args.Action)
+        {
+            case PlayerAction.Bonk when Config.SwapOnBonk:
+            case PlayerAction.Damage when Config.SwapOnDamage:
+                SwapAllPlayers();
+                break;
+            
+            case PlayerAction.Death when Config.SwapOnDeath:
+                Task.Run(async () =>
+                {
+                    await Task.Delay(5000);
+                    SwapAllPlayers();
+                });
+                break;
+        }
     }
     
     public void SwapAllPlayers()
     {
-        var positions = new Dictionary<IPlayer, Vector3>();
-        var stages = new Dictionary<IPlayer, string>();
-        var playersToSwap = new List<IPlayer>();
-        foreach (var player in playerManager.RealPlayers)
+        try
         {
-            if (string.IsNullOrWhiteSpace(player.Stage))
-                continue;
+            var positions = new Dictionary<IPlayer, Vector3>();
+            var stages = new Dictionary<IPlayer, string>();
+            var playersToSwap = new List<IPlayer>();
+            foreach (var player in playerManager.RealPlayers)
+            {
+                if (string.IsNullOrWhiteSpace(player.Stage))
+                    continue;
             
-            positions[player] = player.Position;
-            stages[player] = player.Stage;
-            playersToSwap.Add(player);
-        }
+                positions[player] = player.Position;
+                stages[player] = player.Stage;
+                playersToSwap.Add(player);
+            }
 
-        if (playersToSwap.Count <= 1)
-            return;
+            if (playersToSwap.Count <= 1)
+                return;
 
-        var shuffledPlayers = ShufflePlayers(playersToSwap);
+            var shuffledPlayers = ShufflePlayers(playersToSwap);
         
-        for (var i = 0; i < shuffledPlayers.Count; i++)
+            for (var i = 0; i < shuffledPlayers.Count; i++)
+            {
+                var player = playersToSwap[i];
+                var swapTo = shuffledPlayers[i];
+                player.ChangeStage(stages[swapTo], stageManager.GetNearestWarp(stages[swapTo], positions[swapTo]) ?? "");
+            }
+        }
+        catch (Exception e)
         {
-            var player = playersToSwap[i];
-            var swapTo = shuffledPlayers[i];
-            player.ChangeStage(stages[swapTo], stageManager.GetNearestWarp(stages[swapTo], positions[swapTo]) ?? "");
+            Logger.Error("Error while swapping players", e);
         }
     }
 

@@ -10,6 +10,7 @@ public class Config : IConfig
     public bool AllowSwapToYourself { get; set; } = false;
     public bool SwapOnBonk  { get; set; } = true;
     public bool SwapOnDamage { get; set; } = true;
+    public bool SwapOnDeath  { get; set; } = true;
     public bool SwapOnMoonCollect { get; set; } = true;
     public bool SwapOnTime { get; set; } = true;
     public int MinTime { get; set; } = 60;
