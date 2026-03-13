@@ -22,13 +22,28 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
     
     public override void Initialize()
     {
+        Task.Run(Run);
         eventManager.OnPlayerAction.Subscribe(OnPlayerAction);
+        eventManager.OnPlayerCollectMoon.Subscribe(OnMoonCollect);
         Logger.Info("PlayerSwap initialized");
     }
-
-    private void OnPlayerAction(PlayerActionEventArgs eventArgs)
+    
+    private void OnMoonCollect(PlayerCollectMoonEventArgs args)
     {
-        if(eventArgs.Action == PlayerAction.Bonk)
+        if (!Config.Enabled)
+            return;
+        
+        if(Config.SwapOnMoonCollect)
+            SwapAllPlayers();
+    }
+
+    private void OnPlayerAction(PlayerActionEventArgs args)
+    {
+        if (!Config.Enabled)
+            return;
+
+        if (args.Action == PlayerAction.Bonk && Config.SwapOnBonk
+            || args.Action == PlayerAction.Damage && Config.SwapOnDamage)
             SwapAllPlayers();
     }
     
@@ -88,5 +103,21 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
         result.RemoveAt(0);
         result.Add(first);
         return result;
+    }
+    
+    private async Task Run()
+    {
+        while (true)
+        {
+            if (!Config.Enabled || !Config.SwapOnTime)
+            {
+                await Task.Delay(5000);
+                continue;
+            }
+
+            SwapAllPlayers();
+            
+            await Task.Delay(_random.Next(Config.MinTime, Config.MaxTime) * 1000);
+        }
     }
 }
