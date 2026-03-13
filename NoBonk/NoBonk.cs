@@ -13,7 +13,8 @@ namespace NoBonk;
     Name = "NoBonk",
     Author = "Dimenzio",
     Version = "1.0.0",
-    Description = "Resets the Stage upon bonking"
+    Description = "Resets the Stage upon bonking",
+    Repository = "https://github.com/GrafDimenzio/OdysseyChallenges"
     )]
 public class NoBonk(EventManager eventManager, StageManager stageManager, PlayerManager playerManager, ILogger logger) : Plugin<Config>
 {

@@ -13,7 +13,8 @@ namespace RandomTeleports;
     Name = "RandomTeleports",
     Author = "Dimenzio",
     Description = "Teleports players randomly",
-    Version = "1.0.0"
+    Version = "1.0.0",
+    Repository = "https://github.com/GrafDimenzio/OdysseyChallenges"
     )]
 public class RandomTeleports(EventManager eventManager, PlayerManager playerManager, StageManager stageManager, ILogger logger) : Plugin<Config>
 {

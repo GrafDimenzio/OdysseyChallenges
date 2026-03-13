@@ -10,7 +10,8 @@ namespace SameStage;
     Name = "SameStage",
     Author = "Dimenzio",
     Description = "Teleports every player on the same Stage",
-    Version =  "1.0.0"
+    Version =  "1.0.0",
+    Repository = "https://github.com/GrafDimenzio/OdysseyChallenges"
     )]
 public class SameStage(EventManager eventManager, PlayerManager playerManager, StageManager stageManager) : Plugin<Config>
 {
