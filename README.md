@@ -4,6 +4,18 @@
 
 ---
 
+## Installation
+
+1. Download one or more plugin `.dll` files:  
+   - `NoBonk.dll`  
+   - `PlayerSwap.dll`  
+   - `RandomTeleports.dll`  
+   - `SameStage.dll`  
+2. Place the `.dll` files in your DSMOO plugin directory.  
+3. After installation, default configuration files will be automatically generated for each plugin upon starting DSMOO  
+
+---
+
 ## NoBonk
 
 The **NoBonk** plugin resets all players whenever a player bonks.
