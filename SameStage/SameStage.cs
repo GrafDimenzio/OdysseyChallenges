@@ -10,10 +10,11 @@ namespace SameStage;
     Name = "SameStage",
     Author = "Dimenzio",
     Description = "Teleports every player on the same Stage",
-    Version =  "1.0.0",
+    Version = "1.0.0",
     Repository = "https://github.com/GrafDimenzio/OdysseyChallenges"
-    )]
-public class SameStage(EventManager eventManager, PlayerManager playerManager, StageManager stageManager) : Plugin<Config>
+)]
+public class SameStage(EventManager eventManager, PlayerManager playerManager, StageManager stageManager)
+    : Plugin<Config>
 {
     public override void Initialize()
     {
@@ -25,12 +26,12 @@ public class SameStage(EventManager eventManager, PlayerManager playerManager, S
     {
         if (args.SendBack || !Config.Enabled)
             return;
-        
+
         foreach (var player in playerManager.RealPlayers)
         {
             if (player == args.Player)
                 continue;
-            
+
             if (player.Stage != args.NewStage)
                 player.ChangeStage(args.NewStage, stageManager.GetConnection(player.Stage, args.NewStage));
         }

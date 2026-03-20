@@ -15,11 +15,12 @@ namespace PlayerSwap;
     Description = "Swaps players position",
     Version = "1.0.0",
     Repository = "https://github.com/GrafDimenzio/OdysseyChallenges"
-    )]
-public class PlayerSwap(EventManager eventManager, StageManager stageManager, PlayerManager playerManager) : Plugin<Config>
+)]
+public class PlayerSwap(EventManager eventManager, StageManager stageManager, PlayerManager playerManager)
+    : Plugin<Config>
 {
     private readonly Random _random = new();
-    
+
     public override void Initialize()
     {
         Task.Run(Run);
@@ -27,13 +28,13 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
         eventManager.OnPlayerCollectMoon.Subscribe(OnMoonCollect);
         Logger.Info("PlayerSwap initialized");
     }
-    
+
     private void OnMoonCollect(PlayerCollectMoonEventArgs args)
     {
         if (!Config.Enabled)
             return;
-        
-        if(Config.SwapOnMoonCollect)
+
+        if (Config.SwapOnMoonCollect)
             SwapAllPlayers();
     }
 
@@ -48,7 +49,7 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
             case PlayerAction.Damage when Config.SwapOnDamage:
                 SwapAllPlayers();
                 break;
-            
+
             case PlayerAction.Death when Config.SwapOnDeath:
                 Task.Run(async () =>
                 {
@@ -58,7 +59,7 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
                 break;
         }
     }
-    
+
     public void SwapAllPlayers()
     {
         try
@@ -70,7 +71,7 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
             {
                 if (string.IsNullOrWhiteSpace(player.Stage))
                     continue;
-            
+
                 positions[player] = player.Position;
                 stages[player] = player.Stage;
                 playersToSwap.Add(player);
@@ -80,12 +81,13 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
                 return;
 
             var shuffledPlayers = ShufflePlayers(playersToSwap);
-        
+
             for (var i = 0; i < shuffledPlayers.Count; i++)
             {
                 var player = playersToSwap[i];
                 var swapTo = shuffledPlayers[i];
-                player.ChangeStage(stages[swapTo], stageManager.GetNearestWarp(stages[swapTo], positions[swapTo]) ?? "");
+                player.ChangeStage(stages[swapTo],
+                    stageManager.GetNearestWarp(stages[swapTo], positions[swapTo]) ?? "");
             }
         }
         catch (Exception e)
@@ -106,14 +108,12 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
                 isShuffled = true;
                 if (Config.AllowSwapToYourself)
                     break;
-                
+
                 for (var i = 0; i < shuffledList.Count; i++)
-                {
-                    if(shuffledList[i] == players[i])
+                    if (shuffledList[i] == players[i])
                         isShuffled = false;
-                }
-            }
-            while(!isShuffled && !Config.AllowSwapToYourself);
+            } while (!isShuffled && !Config.AllowSwapToYourself);
+
             return shuffledList;
         }
 
@@ -123,7 +123,7 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
         result.Add(first);
         return result;
     }
-    
+
     private async Task Run()
     {
         while (true)
@@ -135,7 +135,7 @@ public class PlayerSwap(EventManager eventManager, StageManager stageManager, Pl
             }
 
             SwapAllPlayers();
-            
+
             await Task.Delay(_random.Next(Config.MinTime, Config.MaxTime) * 1000);
         }
     }

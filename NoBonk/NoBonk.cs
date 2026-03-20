@@ -15,8 +15,9 @@ namespace NoBonk;
     Version = "1.0.0",
     Description = "Resets the Stage upon bonking",
     Repository = "https://github.com/GrafDimenzio/OdysseyChallenges"
-    )]
-public class NoBonk(EventManager eventManager, StageManager stageManager, PlayerManager playerManager, ILogger logger) : Plugin<Config>
+)]
+public class NoBonk(EventManager eventManager, StageManager stageManager, PlayerManager playerManager, ILogger logger)
+    : Plugin<Config>
 {
     public override void Initialize()
     {
@@ -28,23 +29,21 @@ public class NoBonk(EventManager eventManager, StageManager stageManager, Player
     {
         if (!Config.Enabled)
             return;
-        
+
         if (args.Action != PlayerAction.Bonk)
             return;
 
-        var players = new List<IPlayer>() { args.Player };
+        var players = new List<IPlayer> { args.Player };
         if (!Config.ResetOnlyBonkingPlayer)
-        {
             foreach (var player in playerManager.RealPlayers)
             {
                 if (player == args.Player)
                     continue;
                 if (Config.ResetOnlyPlayersOnSameStage && player.Stage != args.Player.Stage)
                     continue;
-                
+
                 players.Add(player);
             }
-        }
 
         foreach (var player in players)
         {

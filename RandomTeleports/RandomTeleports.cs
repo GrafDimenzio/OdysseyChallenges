@@ -15,11 +15,15 @@ namespace RandomTeleports;
     Description = "Teleports players randomly",
     Version = "1.0.0",
     Repository = "https://github.com/GrafDimenzio/OdysseyChallenges"
-    )]
-public class RandomTeleports(EventManager eventManager, PlayerManager playerManager, StageManager stageManager, ILogger logger) : Plugin<Config>
+)]
+public class RandomTeleports(
+    EventManager eventManager,
+    PlayerManager playerManager,
+    StageManager stageManager,
+    ILogger logger) : Plugin<Config>
 {
-    private readonly Random _random = new Random();
-    
+    private readonly Random _random = new();
+
     public override void Initialize()
     {
         Task.Run(Run);
@@ -32,8 +36,8 @@ public class RandomTeleports(EventManager eventManager, PlayerManager playerMana
     {
         if (!Config.Enabled)
             return;
-        
-        if(Config.TeleportOnMoonCollect)
+
+        if (Config.TeleportOnMoonCollect)
             TeleportPlayer(args.Player);
     }
 
@@ -42,8 +46,8 @@ public class RandomTeleports(EventManager eventManager, PlayerManager playerMana
         if (!Config.Enabled)
             return;
 
-        if (args.Action == PlayerAction.Bonk && Config.TeleportOnBonk 
-            || args.Action == PlayerAction.Damage && Config.TeleportOnDamage)
+        if ((args.Action == PlayerAction.Bonk && Config.TeleportOnBonk)
+            || (args.Action == PlayerAction.Damage && Config.TeleportOnDamage))
             TeleportPlayer(args.Player);
     }
 
@@ -66,7 +70,7 @@ public class RandomTeleports(EventManager eventManager, PlayerManager playerMana
                     continue;
                 TeleportPlayer(player);
             }
-            
+
             await Task.Delay(_random.Next(Config.MinTime, Config.MaxTime) * 1000);
         }
     }
@@ -88,7 +92,7 @@ public class RandomTeleports(EventManager eventManager, PlayerManager playerMana
                 }
 
                 possibleStages = possibleStages.Distinct().ToList();
-                for(var i = 0; i < Config.IncreasedKingdomChance; i++)
+                for (var i = 0; i < Config.IncreasedKingdomChance; i++)
                     possibleStages.Add(player.Stage);
             }
 
